@@ -1,0 +1,14 @@
+.movies {
+  margin: 20px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+.movies .movie {
+  flex-basis: 25%;
+}
+
+.movies .movie img {
+  width: 100%;
+}
