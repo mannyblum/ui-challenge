@@ -29,6 +29,7 @@ body {
 .movies {
   z-index: 5;
   display: flex;
+  background: black;
   margin: 90px 100px 0;
   transition: opacity 0.2s;
   flex-flow: row wrap;
@@ -50,8 +51,27 @@ body {
   flex-basis: 25%;
 }
 
+@media (min-width: 576px) {
+  .movies .movie-holder {
+    flex-basis: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .movies .movie-holder {
+    flex-basis: 33.3333%;
+  }
+}
+
+@media (min-width: 992px) {
+  .movies .movie-holder {
+    flex-basis: 25%;
+  }
+}
+
 .movies .movie-holder .movie {
   position: relative;
+  background: black;
   margin: 0 2px;
   transition: all 0.4s ease-in-out;
 }
