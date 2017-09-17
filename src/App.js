@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
+import './App.css';
 
-import './App.css'; 
 const PATH_BASE = 'https://api.themoviedb.org/3';
 const PATH_SEARCH = '/movie/popular';
 const API_KEY = '676b37a6ad0aaaa61a566c3097c60afe';
@@ -13,13 +12,15 @@ class App extends Component {
     this.state = {
       results: null,
       page: 1,
-      isLoading: false
+      isLoading: false,
+      isLoadingMore: false
     };
 
     this.setPopularMovies = this.setPopularMovies.bind(this);
     this.fetchPopularMovies = this.fetchPopularMovies.bind(this);
 
     this.loadMore = this.loadMore.bind(this);
+    this.onScroll = this.onScroll.bind(this);
   }
 
   setPopularMovies(result) {
@@ -36,36 +37,34 @@ class App extends Component {
       });
   }
 
-  handleScroll(event) {
-      var innerHeight = window.innerHeight;
-      var scrollTop = $(window).scrollTop();
-      var docHeight = $(document).height();
-      var totalScrolled = scrollTop + innerHeight;
-  }
-
   componentDidMount() {
     this.fetchPopularMovies(1, false);
+    window.addEventListener('scroll', this.onScroll, false);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll, false);
+  }
+
+  onScroll = () => {
+    if ( (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 500) && this.state.results.length && !this.state.isLoadingMore ) {
+      this.loadMore();
+    }
   }
 
   loadMore() {
-    this.setState({page: this.state.page + 1});
+    this.setState({page: this.state.page + 1, isLoadingMore: true});
 
     // TODO: DRY THIS UP
     fetch(`${PATH_BASE}${PATH_SEARCH}?api_key=${API_KEY}&page=${this.state.page + 1}`)
       .then(response => response.json())
       .then(result => {
-        this.setState({ results: this.state.results.concat(result.results) })
+        this.setState({ results: this.state.results.concat(result.results), isLoadingMore: false })
       });
   }
 
   render() {
     const { results, isLoading } = this.state;
-    console.log('isLoading', isLoading);
-    console.log('results', results);
-
-    if (isLoading) {
-      return null;
-    }
 
     return (
       <div className="flix">
