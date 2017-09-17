@@ -23,11 +23,12 @@ class App extends Component {
   }
 
   setPopularMovies(result) {
-    console.log('result', result.results);
-    this.setState({ results: result.results });
+    this.setState({ results: result.results, isLoading: false });
   }
 
   fetchPopularMovies(page, isLoadingMore) {
+    this.setState({ isLoading: true });
+
     fetch(`${PATH_BASE}${PATH_SEARCH}?api_key=${API_KEY}&page=${page}`)
       .then(response => response.json())
       .then(result => {
@@ -58,16 +59,22 @@ class App extends Component {
   }
 
   render() {
-    const { results } = this.state;
+    const { results, isLoading } = this.state;
+    console.log('isLoading', isLoading);
+    console.log('results', results);
+
+    if (isLoading) {
+      return null;
+    }
 
     return (
       <div className="flix">
         <div className="flix-header">
           <h1>Popular</h1>
         </div>
-        { results ?
+        { (isLoading || !results) ?
+          <Loading /> :
           <Movies list={results} />
-          : null
         }
         <div className="load-more">
           <Button onClick={this.loadMore}>Load More</Button>
@@ -76,6 +83,11 @@ class App extends Component {
     );
   }
 }
+
+const Loading = () =>
+  <div className="movies">
+    <h1>Loading ...</h1>
+  </div>
 
 const Button = ({ onClick, children }) =>
   <button onClick={onClick} type="button">
@@ -98,6 +110,5 @@ const Movies = ({list}) =>
       }
     })}
   </div>
-
 
 export default App;
