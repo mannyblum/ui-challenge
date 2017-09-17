@@ -1,57 +1,101 @@
 import React, { Component } from 'react';
-import './App.css';
+import $ from 'jquery';
 
+import './App.css'; 
 const PATH_BASE = 'https://api.themoviedb.org/3';
 const PATH_SEARCH = '/movie/popular';
 const API_KEY = '676b37a6ad0aaaa61a566c3097c60afe';
-const PAGE = 1;
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      result: null,
+      results: null,
+      page: 1,
+      isLoading: false
     };
 
     this.setPopularMovies = this.setPopularMovies.bind(this);
     this.fetchPopularMovies = this.fetchPopularMovies.bind(this);
+
+    this.loadMore = this.loadMore.bind(this);
   }
 
   setPopularMovies(result) {
-    this.setState({ result: result });
+    console.log('result', result.results);
+    this.setState({ results: result.results });
   }
 
-  fetchPopularMovies() {
-    // https://api.themoviedb.org/3/movie/popular?api_key=676b37a6ad0aaaa61a566c3097c60afe&page=1
-    fetch(`${PATH_BASE}${PATH_SEARCH}?api_key=${API_KEY}&page=${PAGE}`)
+  fetchPopularMovies(page, isLoadingMore) {
+    fetch(`${PATH_BASE}${PATH_SEARCH}?api_key=${API_KEY}&page=${page}`)
       .then(response => response.json())
-      .then(result => this.setPopularMovies(result));
+      .then(result => {
+        this.setPopularMovies(result)
+      });
+  }
+
+  handleScroll(event) {
+      var innerHeight = window.innerHeight;
+      var scrollTop = $(window).scrollTop();
+      var docHeight = $(document).height();
+      var totalScrolled = scrollTop + innerHeight;
   }
 
   componentDidMount() {
-    this.fetchPopularMovies();
+    this.fetchPopularMovies(1, false);
+  }
+
+  loadMore() {
+    this.setState({page: this.state.page + 1});
+
+    // TODO: DRY THIS UP
+    fetch(`${PATH_BASE}${PATH_SEARCH}?api_key=${API_KEY}&page=${this.state.page + 1}`)
+      .then(response => response.json())
+      .then(result => {
+        this.setState({ results: this.state.results.concat(result.results) })
+      });
   }
 
   render() {
-    const { result } = this.state;
+    const { results } = this.state;
 
     return (
-      <div className="App">
-        <h1>Popular</h1>
-        { result ? <Movies list={result.results} /> : null }
+      <div className="flix">
+        <div className="flix-header">
+          <h1>Popular</h1>
+        </div>
+        { results ?
+          <Movies list={results} />
+          : null
+        }
+        <div className="load-more">
+          <Button onClick={this.loadMore}>Load More</Button>
+        </div>
       </div>
     );
   }
 }
 
+const Button = ({ onClick, children }) =>
+  <button onClick={onClick} type="button">
+    {children}
+  </button>
+
 const Movies = ({list}) =>
   <div className="movies">
-    { list.map((item) =>
-        <div key={item.id} className="movie">
-          <img src={'https://image.tmdb.org/t/p/w1280/' + item.backdrop_path} alt={item.title} />
-        </div>
-      )}
+    { list.map(function(item) {
+      if (item.backdrop_path) {
+        return (
+          <div key={item.id} className="movie">
+            <span>{item.title}</span>
+
+            <img src={'https://image.tmdb.org/t/p/w1280/' + item.backdrop_path} alt={item.title} />
+          </div>
+        )
+      }
+    })}
   </div>
+
 
 export default App;

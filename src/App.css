@@ -1,14 +1,70 @@
+body {
+  background: #000;
+  color: #fff;
+}
+
+.flix {
+  position: relative;
+  z-index: 1;
+}
+
+.flix-header {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  z-index: 3;
+}
+
+
+.flix-header h1 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 48px;
+  margin: 0;
+  text-transform: uppercase;
+  color: red;
+}
+
 .movies {
-  margin: 20px;
+  position: absolute;
+  top: 50px;
+  z-index: 5;
   display: flex;
+  margin: 0 20px;
   flex-flow: row wrap;
   justify-content: flex-start;
 }
 
 .movies .movie {
   flex-basis: 25%;
+  position: relative;
+}
+
+.movies .movie span {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 20px;
+  font-family: 'Oswald', sans-serif;
+  text-shadow: 2px 2px 0px black;
 }
 
 .movies .movie img {
   width: 100%;
+}
+
+.movies .load-more {
+  margin: 10px auto;
+}
+
+.flix .load-more button {
+  position: absolute;
+  right: 20px;
+  top: 8px;
+  width: auto;
+  font-size: 20px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  border-width: 0;
+  background-color: red;
+  color: white;
 }
