@@ -28,15 +28,14 @@ body {
 .movies {
   z-index: 5;
   display: flex;
-  margin: 0 20px;
-  margin-top: 50px;
+  margin: 50px 200px 0;
+  transition: opacity 0.2s;
   flex-flow: row wrap;
   justify-content: flex-start;
-  transition: opacity 0.2s;
 }
 
 .movies:hover .movie-holder {
-  opacity: 0.5;
+  opacity: 0.25;
 }
 
 .movies:hover .movie-holder:hover {
@@ -46,18 +45,19 @@ body {
 .movies .movie-holder {
   width: 100%;
   display: flex;
-  flex-basis: 25%;
   position: relative;
+  flex-basis: 25%;
 }
 
 .movies .movie-holder .movie {
   position: relative;
-  transition: all 0.2s ease-in-out;
+  margin: 0 2px;
+  transition: all 0.4s ease-in-out;
 }
 
 .movies .movie-holder .movie:hover {
-  transform: scale(1.2,1.2);
   z-index: 5;
+  transform: scale(1.2,1.2);
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
 }
 
@@ -67,7 +67,10 @@ body {
   left: 10px;
   font-size: 20px;
   font-family: 'Oswald', sans-serif;
-  text-shadow: 2px 2px 0px black;
+  text-shadow: -1px -1px 0 black,
+    1px -1px 0 black,
+    -1px 1px 0 black,
+    1px 1px 0 black;
 }
 
 .movies .movie-holder img {
@@ -75,19 +78,11 @@ body {
   max-width: 100%;
 }
 
-.movies .load-more {
-  margin: 10px auto;
+.movies .movie-holder .movie {
+  animation: fadein 2s;
 }
 
-.flix .load-more button {
-  position: absolute;
-  right: 20px;
-  top: 8px;
-  width: auto;
-  font-size: 20px;
-  padding: 5px 10px;
-  border-radius: 3px;
-  border-width: 0;
-  background-color: red;
-  color: white;
+@keyframes fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

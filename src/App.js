@@ -3,7 +3,7 @@ import './App.css';
 
 const PATH_BASE = 'https://api.themoviedb.org/3';
 const PATH_SEARCH = '/movie/popular';
-const API_KEY = '676b37a6ad0aaaa61a566c3097c60afe';
+const API_KEY = '676b37a6ad0aaaa61a566c3097c60afe'; // this would be hidden in a normal application
 
 class App extends Component {
   constructor(props) {
@@ -27,9 +27,10 @@ class App extends Component {
     this.setState({ results: result.results, isLoading: false });
   }
 
-  fetchPopularMovies(page, isLoadingMore) {
+  fetchPopularMovies(page) {
     this.setState({ isLoading: true });
 
+    // Initial Load of data
     fetch(`${PATH_BASE}${PATH_SEARCH}?api_key=${API_KEY}&page=${page}`)
       .then(response => response.json())
       .then(result => {
@@ -38,7 +39,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.fetchPopularMovies(1, false);
+    this.fetchPopularMovies(1);
     window.addEventListener('scroll', this.onScroll, false);
   }
 
@@ -55,7 +56,7 @@ class App extends Component {
   loadMore() {
     this.setState({page: this.state.page + 1, isLoadingMore: true});
 
-    // TODO: DRY THIS UP
+    // TODO: DRY THIS UP - reuse `fetchPopularMovies`
     fetch(`${PATH_BASE}${PATH_SEARCH}?api_key=${API_KEY}&page=${this.state.page + 1}`)
       .then(response => response.json())
       .then(result => {
@@ -75,9 +76,6 @@ class App extends Component {
           <Loading /> :
           <Movies list={results} />
         }
-        <div className="load-more">
-          <Button onClick={this.loadMore}>Load More</Button>
-        </div>
       </div>
     );
   }
@@ -88,25 +86,21 @@ const Loading = () =>
     <h1>Loading ...</h1>
   </div>
 
-const Button = ({ onClick, children }) =>
-  <button onClick={onClick} type="button">
-    {children}
-  </button>
-
 const Movies = ({list}) =>
   <div className="movies">
     { list.map(function(item) {
-      if (item.backdrop_path) {
-        return (
-          <div key={item.id} className="movie-holder">
-            <div className="movie">
-              <span>{item.title}</span>
-
-              <img src={'https://image.tmdb.org/t/p/w1280/' + item.backdrop_path} alt={item.title} />
-            </div>
-          </div>
-        )
+      if (!item.backdrop_path) {
+        return false;
       }
+
+      return (
+        <div key={item.id} className="movie-holder">
+          <div className="movie">
+            <span>{item.title}</span>
+            <img src={'https://image.tmdb.org/t/p/w1280/' + item.backdrop_path} alt={item.title} />
+          </div>
+        </div>
+      )
     })}
   </div>
 
