@@ -87,10 +87,12 @@ const Movies = ({list}) =>
     { list.map(function(item) {
       if (item.backdrop_path) {
         return (
-          <div key={item.id} className="movie">
-            <span>{item.title}</span>
+          <div key={item.id} className="movie-holder">
+            <div className="movie">
+              <span>{item.title}</span>
 
-            <img src={'https://image.tmdb.org/t/p/w1280/' + item.backdrop_path} alt={item.title} />
+              <img src={'https://image.tmdb.org/t/p/w1280/' + item.backdrop_path} alt={item.title} />
+            </div>
           </div>
         )
       }

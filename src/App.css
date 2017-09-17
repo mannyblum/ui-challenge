@@ -32,14 +32,36 @@ body {
   margin: 0 20px;
   flex-flow: row wrap;
   justify-content: flex-start;
+  transition: opacity 0.2s;
 }
 
-.movies .movie {
+.movies:hover .movie-holder {
+  opacity: 0.5;
+}
+
+.movies:hover .movie-holder:hover {
+  opacity: 1;
+}
+
+.movies .movie-holder {
+  width: 100%;
+  display: flex;
   flex-basis: 25%;
   position: relative;
 }
 
-.movies .movie span {
+.movies .movie-holder .movie {
+  position: relative;
+  transition: all 0.2s ease-in-out;
+}
+
+.movies .movie-holder .movie:hover {
+  transform: scale(1.2,1.2);
+  z-index: 5;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+}
+
+.movies .movie-holder .movie span {
   position: absolute;
   bottom: 10px;
   left: 10px;
@@ -48,8 +70,9 @@ body {
   text-shadow: 2px 2px 0px black;
 }
 
-.movies .movie img {
+.movies .movie-holder img {
   width: 100%;
+  max-width: 100%;
 }
 
 .movies .load-more {
