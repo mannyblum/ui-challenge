@@ -16,15 +16,10 @@ class App extends Component {
       isLoadingMore: false
     };
 
-    this.setPopularMovies = this.setPopularMovies.bind(this);
     this.fetchPopularMovies = this.fetchPopularMovies.bind(this);
 
     this.loadMore = this.loadMore.bind(this);
     this.onScroll = this.onScroll.bind(this);
-  }
-
-  setPopularMovies(result) {
-    this.setState({ results: result.results, isLoading: false });
   }
 
   fetchPopularMovies(page) {
@@ -34,8 +29,17 @@ class App extends Component {
     fetch(`${PATH_BASE}${PATH_SEARCH}?api_key=${API_KEY}&page=${page}`)
       .then(response => response.json())
       .then(result => {
-        this.setPopularMovies(result)
-      });
+        this.setState({ results: result.results, isLoading: false });
+      })
+      .then(() => {
+        // sorta hacky, loads 2 pages worth of data because I can't scroll wit h just 1 set of results and API doesn't allow to set a limit of results
+        fetch(`${PATH_BASE}${PATH_SEARCH}?api_key=${API_KEY}&page=2`)
+        .then(response => response.json())
+        .then(result => {
+          this.setState({ results: this.state.results.concat(result.results), isLoadingMore: false })
+        })
+      })
+  ;
   }
 
   componentDidMount() {
