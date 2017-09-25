@@ -11,6 +11,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    // defaults
     this.state = {
       results: [],
       page: 1,
@@ -18,12 +19,14 @@ class App extends Component {
       isLoadingMore: false
     };
 
+    // binds
     this.fetchMovies = this.fetchMovies.bind(this);
 
     this.loadMore = this.loadMore.bind(this);
     this.onScroll = this.onScroll.bind(this);
   }
 
+  // simpler fetch function that only fetches data and sets new state
   fetchMovies(pageToLoad) {
     if (!pageToLoad) {
       this.setState({ initLoad: true });
@@ -40,6 +43,9 @@ class App extends Component {
       });
   }
 
+  // fetch movies when component mounts, also loadMore if there isn't enough to
+  // fill the page
+  // add event listener for scroll
   componentDidMount() {
     this.fetchMovies();
 
@@ -81,6 +87,7 @@ class App extends Component {
   }
 }
 
+// Since we don't have state or refs, use stateless component
 function Loading() {
   return (
     <div className="movies">
@@ -89,6 +96,7 @@ function Loading() {
   );
 }
 
+// Since we don't have state or refs, use stateless component
 function Movies({list}) {
   return (
     <div className="movies">
