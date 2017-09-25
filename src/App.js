@@ -37,15 +37,16 @@ class App extends Component {
       .then(result => {
         let newState = this.state.results.concat(result.results);
         this.setState({ results: newState, initLoad: false, isLoadingMore: false, page: page });
-
-        if (document.body.offsetHeight < window.innerHeight) {
-          this.loadMore();
-        }
       });
   }
 
   componentDidMount() {
     this.fetchMovies();
+
+    if (document.body.offsetHeight < window.innerHeight) {
+      this.loadMore();
+    }
+
     window.addEventListener('scroll', this.onScroll, false);
   }
 
